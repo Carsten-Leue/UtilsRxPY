@@ -1,0 +1,25 @@
+language: python
+
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9"
+
+install:
+  - export PYPI_INDEX=$(echo $PYPI_REPO | sed -e "s|^\(.*://\)\(.*\)\(/\?\)\$|\1${PYPI_USERNAME//@/%40}\:${PYPI_PASSWORD}@\2/simple|")
+  - python3 -m pip install tox-travis -i ${PYPI_INDEX}
+
+script:
+  - python3 -m tox -i ${PYPI_INDEX}
+
+deploy:
+  provider: pypi
+  skip_existing: true
+  user: "${PYPI_USERNAME}"
+  password: "${PYPI_PASSWORD}"
+  server: "${PYPI_REPO}"
+  skip_cleanup: true
+  distributions: "sdist bdist_wheel"
+  on:
+    tags: true

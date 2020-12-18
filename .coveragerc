@@ -1,0 +1,10 @@
+[report]
+omit=
+    rx_utils/docs/*
+exclude_lines =
+    pragma: no cover
+    def __str__
+    def __ref__
+    @abstract
+    @overload
+    
