@@ -1,5 +1,5 @@
 """Some general purpose utilities"""
-import asyncio.events
+import asyncio
 from asyncio import (AbstractEventLoop, CancelledError, ensure_future,
                      iscoroutinefunction)
 from functools import partial
@@ -15,7 +15,7 @@ T = TypeVar('T', covariant=True)    # pylint: disable=invalid-name
 
 logger = getLogger(__name__)
 
-_get_loop = getattr(asyncio.events, 'get_running_loop', None) or getattr(asyncio.events, '_get_running_loop')
+_get_loop = getattr(asyncio, 'get_running_loop', None) or getattr(asyncio, '_get_running_loop')
 assert callable(_get_loop)
 
 

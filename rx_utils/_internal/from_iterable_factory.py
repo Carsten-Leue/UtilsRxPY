@@ -1,6 +1,5 @@
 """Creates an iterator from a factory of iterables"""
-from asyncio.events import AbstractEventLoop
-from asyncio.futures import CancelledError
+from asyncio import AbstractEventLoop, CancelledError
 from functools import partial, reduce
 from inspect import isawaitable
 from itertools import takewhile
