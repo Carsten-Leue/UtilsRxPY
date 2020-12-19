@@ -10,7 +10,7 @@ install:
   - python3 -m pip install tox-travis
 
 script:
-  - python3 -m tox -i ${PYPI_INDEX}
+  - python3 -m tox
 
 deploy:
   provider: pypi

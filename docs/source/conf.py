@@ -44,7 +44,10 @@ source_suffix = [
 ]
 
 # Some config
-intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'rx': ('https://rxpy.readthedocs.io/en/latest/', None)
+}
 always_document_param_types = True
 napoleon_use_ivar = True
 autosectionlabel_prefix_document = True

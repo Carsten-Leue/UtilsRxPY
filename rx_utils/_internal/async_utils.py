@@ -1,26 +1,29 @@
 """Some general purpose utilities"""
+import asyncio.events
 from asyncio import (AbstractEventLoop, CancelledError, ensure_future,
                      iscoroutinefunction)
-from asyncio.events import _get_running_loop
 from functools import partial
 from logging import getLogger
-from typing import Awaitable, Callable, Optional, TypeVar
+from typing import Any, Awaitable, Callable, Optional, TypeVar
 
 from rx import Observable
 from rx import create as rx_create
-from rx.core.typing import Observer, OnNext, Scheduler, TState
+from rx.core.typing import Action, Observer, OnNext, Scheduler, TState
 from rx.disposable import Disposable
 
 T = TypeVar('T', covariant=True)    # pylint: disable=invalid-name
 
 logger = getLogger(__name__)
 
+_get_loop = getattr(asyncio.events, 'get_running_loop', None) or getattr(asyncio.events, '_get_running_loop')
+assert callable(_get_loop)
+
 
 async def _async_subscribe(generator: Callable[[OnNext, AbstractEventLoop], Awaitable], observer: Observer[T], event_loop: Optional[AbstractEventLoop]):
     #: sanity check
     assert observer
     #: access the event loop
-    loop = event_loop or _get_running_loop()
+    loop = event_loop or _get_loop()
 
     try:
         #: log this
@@ -41,8 +44,16 @@ async def _async_subscribe(generator: Callable[[OnNext, AbstractEventLoop], Awai
         loop.call_soon(observer.on_error, ex)
 
 
+def _create_action(delegate: Callable[[], Any]) -> Action:
+
+    def _dispatch():
+        delegate()
+
+    return _dispatch
+
+
 def _create_disposable(generator: Callable[[OnNext, AbstractEventLoop], Awaitable], observer: Observer[T], loop: Optional[AbstractEventLoop] = None) -> Disposable:
-    return Disposable(ensure_future(_async_subscribe(generator, observer, loop), loop=loop).cancel)
+    return Disposable(_create_action(ensure_future(_async_subscribe(generator, observer, loop), loop=loop).cancel))
 
 
 def _scheduled_action(generator: Callable[[OnNext, AbstractEventLoop], Awaitable], observer: Observer[T], loop: AbstractEventLoop, _scheduler: Scheduler, _state: Optional[TState]) -> Disposable:
@@ -56,7 +67,7 @@ def _on_subscribe(generator: Callable[[OnNext, AbstractEventLoop], Awaitable], b
     sched: Optional[Scheduler] = base_scheduler or scheduler
 
     if sched is not None:
-        return sched.schedule(partial(_scheduled_action, generator, observer, getattr(scheduler, '_loop', None)))
+        return sched.schedule(partial(_scheduled_action, generator, observer, getattr(sched, '_loop', None)))
 
     logger.warning('No scheduler available')
     return _create_disposable(generator, observer)

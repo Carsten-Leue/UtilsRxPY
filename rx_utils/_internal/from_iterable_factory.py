@@ -92,6 +92,8 @@ async def _async_from_async(iterable: Union[AsyncIterable[T], Iterable[T]], on_n
 
 
 def _from_async(scheduler: Optional[Scheduler], iterable: Union[AsyncIterableAsync[T], IterableAsync[T]]) -> Observable:
+    #: sanity check
+    assert isawaitable(iterable)
 
     async def _dispatch(on_next: OnNext, loop: AbstractEventLoop):
         await _async_from_async(await iterable, on_next, loop)
@@ -100,6 +102,8 @@ def _from_async(scheduler: Optional[Scheduler], iterable: Union[AsyncIterableAsy
 
 
 def _from_sync(scheduler: Optional[Scheduler], iterable: Union[AsyncIterable[T], Iterable[T]]) -> Observable:
+    #: sanity check
+    assert not isawaitable(iterable)
 
     #: check for a regular iterable
     if _is_iterable(iterable):
@@ -154,7 +158,10 @@ def _from_iterable_factory(factory: IterableFactory[T], base_scheduler: Optional
 
 
 def from_iterable_factory(factory: IterableFactory[T], scheduler: Optional[Scheduler] = None) -> Observable:
-    """Constructs an observable for an sync or async iterable factory.
+    """Constructs an observable for an sync or async iterable factory. Each subscription will create
+    a new iterable via the factory, this allows e.g. to iterate multiple times over generators. If the object
+    returned by the iterable factory is closeable (sync or async) then it will be closed when the
+    observable gets unsubscribed. This is e.g. the case for generators.
 
     Args:
         factory: the iterable factory, may be sync or async
