@@ -55,9 +55,8 @@ settings = dict(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',        
-        'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'License :: MIT',
+        'License :: OSI Approved :: MIT License',
         'Typing :: Typed'
     ],
     zip_safe=False
