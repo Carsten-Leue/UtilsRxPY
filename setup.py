@@ -36,7 +36,7 @@ def read_requirements(filename: str) -> Sequence[str]:
 settings = dict(
     name='UtilsRxPY',
     packages=find_packages(exclude=["test"]),
-    version='0.0.5',
+    version='0.0.6',
     author='Dr. Carsten Leue',
     author_email='carsten.leue@gmx.net',
     description=('This is an awesome project!'),

@@ -13,7 +13,7 @@
 from typing import Tuple
 
 # version information
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 
 from ._internal.from_iterable_factory import from_iterable_factory
 
