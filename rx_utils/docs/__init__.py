@@ -14,7 +14,7 @@ from typing import Sequence
 from os.path import dirname, join, normpath
 
 # version information
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 
 
 def get_objects_inv_path() -> str:
