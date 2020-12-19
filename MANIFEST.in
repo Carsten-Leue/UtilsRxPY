@@ -1,6 +1,0 @@
-include requirements.txt 
-include test-requirements.txt
-include LICENSE
-
-recursive-include UtilsRxPY py.typed
-include UtilsRxPY/docs/objects.inv
