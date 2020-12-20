@@ -26,20 +26,12 @@ async def _async_subscribe(generator: Callable[[OnNext, AbstractEventLoop], Awai
     loop = event_loop or _get_loop()
 
     try:
-        #: log this
-        logger.debug('[%s]: Subscribing...')
         #: produce the value and dispatch
         await generator(observer.on_next, loop)
         loop.call_soon(observer.on_completed)
-        #: log this
-        logger.debug('[%s]: Completed')
     except CancelledError:
         loop.call_soon(observer.on_completed)
-        #: log this
-        logger.debug('[%s]: Canceled')
     except Exception as ex:  # pylint: disable=broad-except
-        #: log this
-        logger.exception('[%s]: Error')
         #: dispatch the error
         loop.call_soon(observer.on_error, ex)
 
