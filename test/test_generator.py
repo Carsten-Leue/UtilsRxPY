@@ -1,13 +1,3 @@
-# +-------------------------------------------------------------------+
-# | Licensed Materials - Property of IBM                              |
-# |                                                                   |
-# | Hosting Appliance                                                 |
-# |                                                                   |
-# | Copyright IBM Corp. 2020 All Rights Reserved                      |
-# |                                                                   |
-# | US Government Users Restricted Rights - Use, duplication or       |
-# | disclosure restricted by GSA ADP Schedule Contract with IBM Corp. |
-# +-------------------------------------------------------------------+
 """Test the use of a generator to build an observable"""
 from typing import Iterator, List
 from contextlib import contextmanager
